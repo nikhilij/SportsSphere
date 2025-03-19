@@ -48,25 +48,47 @@
 
 ### 📂 2. Project Structure
 ```
-sports-platform-backend/
+(for %i in (file1.txt test.js ) do type nul > %i)  # To create multiple files at once
+backend/
 │── src/
-│   │── config/              # Configuration files (database, env variables)
-│   │── controllers/         # Business logic and request handling
-│   │── middlewares/         # Authentication, validation, logging, etc.
-│   │── models/              # Database models (PostgreSQL, MongoDB)
+│   │── config/              # DB configs, env configs
+│   │── controllers/         # Business logic, controllers
+│   │── middlewares/         # Auth, validation, error-handling
+│   │── models/              # DB schemas (PostgreSQL, MongoDB)
 │   │── routes/              # API routes
-│   │── services/            # Business logic layer
-│   │── utils/               # Utility functions
-│   │── app.js               # Express app setup
-│   │── server.js            # Server entry point
+│   │── services/            # Service layer (business logic separation)
+│   │── utils/               # Utility helpers (e.g., JWT, logger, etc.)
+│   │── jobs/                # Cron jobs (e.g., event reminders)
+│   │── app.js               # Express app config
+│   │── server.js            # Server bootstrap
 │
-│── tests/                   # Unit and integration tests
-│── docs/                    # API documentation
-│── scripts/                 # Database seeding, cron jobs
-│── .env                     # Environment variables
-│── .gitignore               # Ignore unnecessary files
-│── package.json             # Dependencies & scripts
-│── README.md                # Project documentation
+│── tests/                  # Unit & integration tests
+│── docs/                   # Swagger or Postman API docs
+│── scripts/                # Seeding scripts or CLI tools
+│── .env                    # Env vars
+│── package.json            # Dependencies & scripts
+│── .gitignore              # Node_modules, logs, etc.
+│── README.md
+
+frontend/
+│── public/                 # Static assets, index.html
+│── src/
+│   │── assets/             # Images, icons
+│   │── components/         # Shared React components (Navbar, Footer, etc.)
+│   │── features/           # Feature modules (Auth, Events, Store, etc.)
+│   │── pages/              # React pages (Home, Events, Store, etc.)
+│   │── services/           # API calls (Axios instance)
+│   │── store/              # Redux/Context for state management
+│   │── utils/              # Client-side utilities (formatters, validators)
+│   │── App.jsx             # Root React component
+│   │── index.js            # ReactDOM render
+│
+│── tailwind.config.js      # Tailwind CSS config
+│── postcss.config.js       # PostCSS config (for Tailwind)
+│── package.json            # Frontend dependencies & scripts
+│── .gitignore              # React build ignores
+│── README.md
+
 ```
 
 ---
