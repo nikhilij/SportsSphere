@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom utility classes */
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300 transition-colors;
+  }
+  
+  .btn-success {
+    @apply px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition-colors;
+  }
+  
+  .btn-danger {
+    @apply px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 transition-colors;
+  }
+  
+  .form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden;
+  }
+  
+  .container-padding {
+    @apply px-4 py-6 sm:px-6 sm:py-8 lg:px-8;
+  }
+}
+
+/* Dark mode specific styles */
+.dark {
+  @apply bg-gray-900 text-white;
+  
+  .card {
+    @apply bg-gray-800 text-white;
+  }
+  
+  .form-input {
+    @apply bg-gray-700 border-gray-600 text-white;
+  }
+}
+
+/* Animation classes */
+.animate-modal-appearance {
+  animation: modal-appear 0.2s ease-out;
+}
+
+@keyframes modal-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

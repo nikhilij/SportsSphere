@@ -1,0 +1,58 @@
+/* Global styles that don't fit into Tailwind's utility-first approach */
+
+/* For custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #2d3748;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4a5568;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
+
+/* Global focus styles */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Fixes for mobile browsers */
+input, 
+textarea, 
+button, 
+select, 
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* Custom fonts could be imported here if needed */
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'); */
+
+/* Fix for Safari input radius */
+input[type="search"] {
+  -webkit-appearance: none;
+}
+
+/* Any other global styles that need to be applied to the entire app */

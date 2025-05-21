@@ -1,39 +1,50 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@headlessui/react": "^2.2.4",
+    "@mui/icons-material": "^7.1.0",
+    "@mui/material": "^7.1.0",
+    "@reduxjs/toolkit": "^2.8.2",
+    "@tailwindcss/vite": "^4.1.7",
+    "@tanstack/react-query": "^5.76.1",
+    "axios": "^1.9.0",
+    "chart.js": "^4.4.9",
+    "date-fns": "^4.1.0",
+    "formik": "^2.4.6",
+    "framer-motion": "^12.12.1",
+    "lucide-react": "^0.511.0",
+    "react": "^19.1.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-datepicker": "^8.3.0",
+    "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.6.0",
+    "react-select": "^5.10.1",
+    "react-toastify": "^11.0.5",
+    "tailwindcss": "^4.1.7",
+    "yup": "^1.6.1"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "vite": "^6.3.5"
   }
 }
