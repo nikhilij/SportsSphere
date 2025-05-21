@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { AuthProvider } from '../contexts/AuthContext';
-import AppRoutes from './AppRoutes';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import { AuthProvider } from "../contexts/AuthContext";
+import AppRoutes from "./AppRoutes";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+console.debug("Initializing AppWithProviders component...");
 
 // Loading component
 const LoadingSpinner = () => (
@@ -11,20 +14,25 @@ const LoadingSpinner = () => (
   </div>
 );
 
+console.debug("Wrapping AppWithProviders with BrowserRouter...");
+
 const AppWithProviders = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading app resources
+    console.debug("Simulating resource loading in AppWithProviders...");
     setTimeout(() => {
       setIsLoading(false);
+      console.debug("Resource loading complete.");
     }, 500);
   }, []);
 
   if (isLoading) {
+    console.debug("AppWithProviders is in loading state.");
     return <LoadingSpinner />;
   }
 
+  console.debug("Rendering AppWithProviders content...");
   return (
     <AuthProvider>
       <ToastContainer position="top-right" autoClose={3000} />
@@ -32,5 +40,7 @@ const AppWithProviders = () => {
     </AuthProvider>
   );
 };
+
+console.debug("AppWithProviders component initialized successfully.");
 
 export default AppWithProviders;
