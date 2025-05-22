@@ -4,7 +4,6 @@ import {
    Users,
    Calendar,
    Award,
-   TrendingUp,
    Bell,
    Settings,
    DollarSign,
@@ -15,6 +14,7 @@ import {
    Shield,
 } from "react-feather";
 import MainLayout from "../components/layout/MainLayout";
+import DashboardMetrics from "../components/club/ClubDashboard";
 
 const ClubDashboard = () => {
    const [stats, setStats] = useState({
@@ -36,19 +36,12 @@ const ClubDashboard = () => {
       { id: 3, message: "Tournament registration deadline", type: "warning", time: "3h ago" },
    ]);
 
-   const StatCard = ({ title, value, icon: Icon, color }) => (
-      <motion.div whileHover={{ scale: 1.02 }} className={`bg-white p-6 rounded-lg shadow-md border-l-4 ${color}`}>
-         <div className="flex justify-between items-center">
-            <div>
-               <p className="text-gray-500 text-sm">{title}</p>
-               <h3 className="text-2xl font-bold mt-2">{value}</h3>
-            </div>
-            <div className={`p-3 rounded-full ${color.replace("border", "bg")} bg-opacity-10`}>
-               <Icon size={20} className={color.replace("border", "text").replace("-l-4", "")} />
-            </div>
-         </div>
-      </motion.div>
-   );
+   const metricsData = {
+      members: stats.totalMembers,
+      teams: stats.activeTeams,
+      events: stats.upcomingEvents,
+      revenue: stats.revenue,
+   };
 
    return (
       <MainLayout>
@@ -58,22 +51,9 @@ const ClubDashboard = () => {
                <p className="text-gray-600">Welcome back, Club Admin</p>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-               <StatCard title="Total Members" value={stats.totalMembers} icon={Users} color="border-blue-500" />
-               <StatCard title="Active Teams" value={stats.activeTeams} icon={Shield} color="border-green-500" />
-               <StatCard
-                  title="Upcoming Events"
-                  value={stats.upcomingEvents}
-                  icon={Calendar}
-                  color="border-purple-500"
-               />
-               <StatCard
-                  title="Monthly Revenue"
-                  value={`$${stats.revenue}`}
-                  icon={DollarSign}
-                  color="border-yellow-500"
-               />
+            {/* Dashboard Metrics */}
+            <div className="mb-8">
+               <DashboardMetrics data={metricsData} />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
