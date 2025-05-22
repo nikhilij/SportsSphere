@@ -8,9 +8,8 @@ console.debug("Initializing React application...");
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
+  
+    <App />
   </StrictMode>
 );
 

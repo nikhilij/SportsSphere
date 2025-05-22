@@ -1,20 +1,23 @@
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import AppWithProviders from "./routes/AppWithProviders";
-import SimpleLayout from "./components/layout/SimpleLayout";
-
-console.debug("Rendering App component...");
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import Home from "./pages/Home";
+import Checkout from "./pages/Checkout";
+import Rewards from "./pages/Rewards";
 
 const App = () => {
-  return (
-    <Router>
-      <SimpleLayout>
-        <AppWithProviders />
-      </SimpleLayout>
-    </Router>
-  );
+   return (
+      <Router>
+         <AuthProvider>
+            <Routes>
+               <Route path="/" element={<Home />} />
+               <Route path="/checkout" element={<Checkout />} />
+               <Route path="/rewards" element={<Rewards />} />
+               {/* Add more routes as needed */}
+            </Routes>
+         </AuthProvider>
+      </Router>
+   );
 };
-
-console.debug("App component rendered successfully.");
 
 export default App;

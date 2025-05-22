@@ -1,5 +1,54 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, Routes, Route } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import {
+  Bell as IconBell,
+  Users as IconUsers,
+  Calendar as IconCalendar,
+  BarChart as IconBarChart,
+  Trophy as IconTrophy,
+  Shield as IconShield,
+  DollarSign as IconDollarSign,
+  UserPlus as IconUserPlus,
+  CalendarPlus as IconCalendarPlus,
+  Award as IconAward,
+  UserCheck as IconUserCheck,
+  MessageSquare as IconMessageSquare,
+} from "react-feather";
+
+// Define navigation items for sidebar
+const navItems = [
+  {
+    name: "Dashboard",
+    path: "/admin",
+    icon: <IconBarChart size={18} />,
+  },
+  {
+    name: "Users",
+    path: "/admin/users",
+    icon: <IconUsers size={18} />,
+  },
+  {
+    name: "Events",
+    path: "/admin/events",
+    icon: <IconCalendar size={18} />,
+  },
+  {
+    name: "Clubs",
+    path: "/admin/clubs",
+    icon: <IconUsers size={18} />,
+  },
+  {
+    name: "Scholarships",
+    path: "/admin/scholarships",
+    icon: <IconTrophy size={18} />,
+  },
+  {
+    name: "Community",
+    path: "/admin/community",
+    icon: <IconMessageSquare size={18} />,
+  },
+];
 
 const MetricCard = ({ title, value, icon, description, linkTo, trend, trendValue }) => (
   <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between">
@@ -24,9 +73,136 @@ const MetricCard = ({ title, value, icon, description, linkTo, trend, trendValue
   </div>
 );
 
+// Chart Components
+// eslint-disable-next-line no-unused-vars
+const LineChart = ({ title, data, options }) => (
+  <div className="bg-white p-4 rounded-lg shadow-md h-64">
+    <h3 className="text-lg font-semibold text-gray-700 mb-4">{title}</h3>
+    <div className="h-48">
+      {/* Chart would be rendered here using a library like Chart.js */}
+      <div className="flex items-center justify-center h-full">
+        <p className="text-gray-500">Chart visualization placeholder</p>
+      </div>
+    </div>
+  </div>
+);
+
+// eslint-disable-next-line no-unused-vars
+const BarChart = ({ title, data, options }) => (
+  <div className="bg-white p-4 rounded-lg shadow-md h-64">
+    <h3 className="text-lg font-semibold text-gray-700 mb-4">{title}</h3>
+    <div className="h-48">
+      {/* Chart would be rendered here using a library like Chart.js */}
+      <div className="flex items-center justify-center h-full">
+        <p className="text-gray-500">Bar chart visualization placeholder</p>
+      </div>
+    </div>
+  </div>
+);
+
+// eslint-disable-next-line no-unused-vars
+const DoughnutChart = ({ title, data, options }) => (
+  <div className="bg-white p-4 rounded-lg shadow-md h-64">
+    <h3 className="text-lg font-semibold text-gray-700 mb-4">{title}</h3>
+    <div className="h-48">
+      {/* Chart would be rendered here using a library like Chart.js */}
+      <div className="flex items-center justify-center h-full">
+        <p className="text-gray-500">Doughnut chart visualization placeholder</p>
+      </div>
+    </div>
+  </div>
+);
+
+// Recent Activity Component
+const RecentActivity = ({ activities }) => (
+  <div className="bg-white rounded-lg shadow-md">
+    <div className="p-4 border-b border-gray-200">
+      <h3 className="text-lg font-semibold text-gray-700">Recent Activity</h3>
+    </div>
+    <div className="p-4">
+      <ul className="space-y-4">
+        {activities.map((activity, index) => (
+          <li key={index} className="flex gap-4 items-start">
+            <div className="p-2 bg-blue-100 rounded-full text-blue-600">{activity.icon}</div>
+            <div>
+              <div className="flex items-center">
+                <h4 className="font-medium text-slate-800">{activity.title}</h4>
+                {activity.isNew && (
+                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                    New
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
+              <span className="text-xs text-gray-500">{activity.time}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+);
+
+// Data Table Component
+const DataTable = ({ title, data, columns, filterPlaceholder }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-gray-700">{title}</h3>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder={filterPlaceholder || "Search..."}
+            className="pl-8 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+          />
+          <span className="absolute left-2.5 top-2.5 text-gray-400">{/* Search icon would be here */}</span>
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="bg-gray-50">
+              {columns.map((column) => (
+                <th
+                  key={column.key}
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {column.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {data.map((row) => (
+              <tr key={row.id} className="hover:bg-gray-50">
+                {columns.map((column) => (
+                  <td key={`${row.id}-${column.key}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {column.render ? column.render(row) : row[column.key]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+// Content Section Component
+const ContentSection = ({ title, description }) => (
+  <section>
+    <h1 className="text-3xl font-bold text-slate-800 mb-2">{title}</h1>
+    <p className="text-slate-600 mb-8">{description}</p>
+    <div className="bg-white p-8 rounded-lg shadow-md">
+      <p className="text-center text-lg text-gray-500">This section is under development</p>
+    </div>
+  </section>
+);
+
 const AdminDashboard = () => {
   // Use auth context for user information and authentication status
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const adminName = user?.name || "Admin";
 
   // Mock data for charts
@@ -186,9 +362,18 @@ const AdminDashboard = () => {
     <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar */}
       <aside className="w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-slate-100 flex flex-col p-6 fixed h-full z-20 shadow-2xl">
+        {" "}
         <div className="mb-10 flex items-center gap-3 px-2">
-          <img src="/logo.png" alt="SportsSphere Logo" className="h-10 w-10 rounded-full bg-white p-1" />
-          <span className="text-2xl font-bold text-white">Admin Panel</span>
+          <img
+            src="/sportssphere-logo.svg"
+            alt="SportsSphere Logo"
+            className="h-12 w-12 rounded-full bg-white p-1 shadow-lg"
+            style={{ filter: "drop-shadow(0px 2px 4px rgba(255, 255, 255, 0.2))" }}
+          />
+          <div>
+            <span className="text-2xl font-bold text-white">Admin Panel</span>
+            <div className="text-xs text-blue-200">SportsSphere Management</div>
+          </div>
         </div>
         <nav className="flex-1">
           <ul className="space-y-2">
@@ -432,20 +617,5 @@ const NavItem = ({ item }) => {
     </li>
   );
 };
-
-const ContentSection = ({ title, description }) => (
-  <section className="bg-white rounded-xl shadow-xl p-8">
-    <h2 className="text-2xl font-bold mb-3 text-slate-800">{title}</h2>
-    <p className="text-slate-600 mb-6 leading-relaxed">{description}</p>
-    <div className="border-t border-gray-200 pt-6">
-      <div className="min-h-[300px] flex items-center justify-center text-gray-400 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-        <p className="text-lg italic">[Content for {title} will be displayed here]</p>
-      </div>
-    </div>
-  </section>
-);
-
-// No need for admin routes as we've already defined them in the dashboard component
-// The admin routes are handled within the AdminDashboard component
 
 export default AdminDashboard;

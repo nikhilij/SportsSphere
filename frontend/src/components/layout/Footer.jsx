@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -7,13 +7,17 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1">
+            {" "}
             <Link to="/" className="flex items-center">
               <img
-                src="/logo.png"
+                src="/sportssphere-logo.svg"
                 alt="SportsSphere"
-                className="h-10 w-auto mr-2"
+                className="h-10 w-10 mr-2"
+                style={{ filter: "drop-shadow(0px 2px 4px rgba(255, 255, 255, 0.2))" }}
               />
-              <span className="text-xl font-bold">SportsSphere</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text">
+                SportsSphere
+              </span>
             </Link>
             <p className="mt-4 text-gray-300 text-sm">
               Connecting sports enthusiasts, athletes, and fans in one vibrant community.
@@ -52,19 +56,29 @@ const Footer = () => {
             <h3 className="text-sm font-semibold uppercase tracking-wider">Quick Links</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link to="/" className="text-gray-300 hover:text-white">Home</Link>
+                <Link to="/" className="text-gray-300 hover:text-white">
+                  Home
+                </Link>
               </li>
               <li>
-                <Link to="/events" className="text-gray-300 hover:text-white">Events</Link>
+                <Link to="/events" className="text-gray-300 hover:text-white">
+                  Events
+                </Link>
               </li>
               <li>
-                <Link to="/clubs" className="text-gray-300 hover:text-white">Clubs</Link>
+                <Link to="/clubs" className="text-gray-300 hover:text-white">
+                  Clubs
+                </Link>
               </li>
               <li>
-                <Link to="/store" className="text-gray-300 hover:text-white">Store</Link>
+                <Link to="/store" className="text-gray-300 hover:text-white">
+                  Store
+                </Link>
               </li>
               <li>
-                <Link to="/forums" className="text-gray-300 hover:text-white">Forums</Link>
+                <Link to="/forums" className="text-gray-300 hover:text-white">
+                  Forums
+                </Link>
               </li>
             </ul>
           </div>
@@ -73,19 +87,29 @@ const Footer = () => {
             <h3 className="text-sm font-semibold uppercase tracking-wider">Resources</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link to="/scholarships" className="text-gray-300 hover:text-white">Scholarships</Link>
+                <Link to="/scholarships" className="text-gray-300 hover:text-white">
+                  Scholarships
+                </Link>
               </li>
               <li>
-                <Link to="/rewards" className="text-gray-300 hover:text-white">Rewards</Link>
+                <Link to="/rewards" className="text-gray-300 hover:text-white">
+                  Rewards
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white">Blog</a>
+                <a href="#" className="text-gray-300 hover:text-white">
+                  Blog
+                </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white">FAQs</a>
+                <a href="#" className="text-gray-300 hover:text-white">
+                  FAQs
+                </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white">Support</a>
+                <a href="#" className="text-gray-300 hover:text-white">
+                  Support
+                </a>
               </li>
             </ul>
           </div>
@@ -96,8 +120,18 @@ const Footer = () => {
               <li className="text-gray-300">
                 <div className="flex items-start">
                   <svg className="h-6 w-6 flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
                   </svg>
                   <span>123 Sports Blvd, Athletic City, AC 12345</span>
                 </div>
@@ -105,7 +139,12 @@ const Footer = () => {
               <li className="text-gray-300">
                 <div className="flex items-start">
                   <svg className="h-6 w-6 flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
                   </svg>
                   <span>contact@sportssphere.com</span>
                 </div>
@@ -113,7 +152,12 @@ const Footer = () => {
               <li className="text-gray-300">
                 <div className="flex items-start">
                   <svg className="h-6 w-6 flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
                   </svg>
                   <span>(555) 123-4567</span>
                 </div>
