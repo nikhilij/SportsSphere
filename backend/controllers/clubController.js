@@ -1,191 +1,161 @@
-const Club = require('../models/Club');
-const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/error');
+const clubService = require("../services/clubService");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/error");
 
 // Get all clubs
 exports.getAllClubs = catchAsync(async (req, res, next) => {
-    const queryObj = { ...req.query };
-    const excludedFields = ['page', 'sort', 'limit', 'fields'];
-    excludedFields.forEach(field => delete queryObj[field]);
+   const result = await clubService.getAllClubs(req.query);
 
-    // Advanced filtering
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-    
-    let query = Club.find(JSON.parse(queryStr));
-
-    // Sorting
-    if (req.query.sort) {
-        const sortBy = req.query.sort.split(',').join(' ');
-        query = query.sort(sortBy);
-    } else {
-        query = query.sort('-createdAt');
-    }
-
-    // Field limiting
-    if (req.query.fields) {
-        const fields = req.query.fields.split(',').join(' ');
-        query = query.select(fields);
-    } else {
-        query = query.select('-__v');
-    }
-
-    // Pagination
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 10;
-    const skip = (page - 1) * limit;
-    query = query.skip(skip).limit(limit);
-
-    // Execute query
-    const clubs = await query;
-
-    res.status(200).json({
-        status: 'success',
-        results: clubs.length,
-        data: {
-            clubs
-        }
-    });
+   res.status(200).json({
+      status: "success",
+      results: result.clubs.length,
+      pagination: result.pagination,
+      data: {
+         clubs: result.clubs,
+      },
+   });
 });
 
 // Get a single club
 exports.getClub = catchAsync(async (req, res, next) => {
-    const club = await Club.findById(req.params.id);
+   const club = await clubService.getClubById(req.params.id);
 
-    if (!club) {
-        return next(new AppError('No club found with that ID', 404));
-    }
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            club
-        }
-    });
+   res.status(200).json({
+      status: "success",
+      data: {
+         club,
+      },
+   });
 });
 
 // Create a new club
 exports.createClub = catchAsync(async (req, res, next) => {
-    const newClub = await Club.create(req.body);
+   const club = await clubService.createClub(req.body, req.user.id);
 
-    res.status(201).json({
-        status: 'success',
-        data: {
-            club: newClub
-        }
-    });
+   res.status(201).json({
+      status: "success",
+      data: {
+         club,
+      },
+   });
 });
 
 // Update a club
 exports.updateClub = catchAsync(async (req, res, next) => {
-    const club = await Club.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    });
+   const club = await clubService.updateClub(req.params.id, req.body, req.user.id);
 
-    if (!club) {
-        return next(new AppError('No club found with that ID', 404));
-    }
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            club
-        }
-    });
+   res.status(200).json({
+      status: "success",
+      data: {
+         club,
+      },
+   });
 });
 
 // Delete a club
 exports.deleteClub = catchAsync(async (req, res, next) => {
-    const club = await Club.findByIdAndDelete(req.params.id);
+   await clubService.deleteClub(req.params.id, req.user.id);
 
-    if (!club) {
-        return next(new AppError('No club found with that ID', 404));
-    }
+   res.status(204).json({
+      status: "success",
+      data: null,
+   });
+});
 
-    res.status(204).json({
-        status: 'success',
-        data: null
-    });
+// Join a club
+exports.joinClub = catchAsync(async (req, res, next) => {
+   const club = await clubService.joinClub(req.params.id, req.user.id);
+
+   res.status(200).json({
+      status: "success",
+      data: {
+         club,
+      },
+   });
+});
+
+// Leave a club
+exports.leaveClub = catchAsync(async (req, res, next) => {
+   const club = await clubService.leaveClub(req.params.id, req.user.id);
+
+   res.status(200).json({
+      status: "success",
+      data: {
+         club,
+      },
+   });
 });
 
 // Search clubs by name or sport
 exports.searchClubs = catchAsync(async (req, res, next) => {
-    const { query } = req.query;
-    
-    if (!query) {
-        return next(new AppError('Please provide a search query', 400));
-    }
-    
-    const clubs = await Club.find({
-        $or: [
-            { name: { $regex: query, $options: 'i' } },
-            { sport: { $regex: query, $options: 'i' } }
-        ]
-    });
-    
-    res.status(200).json({
-        status: 'success',
-        results: clubs.length,
-        data: {
-            clubs
-        }
-    });
+   const { query } = req.query;
+
+   if (!query) {
+      return next(new AppError("Please provide a search query", 400));
+   }
+
+   const clubs = await clubService.searchClubs(query);
+
+   res.status(200).json({
+      status: "success",
+      results: clubs.length,
+      data: {
+         clubs,
+      },
+   });
 });
 
 // Get popular clubs (by member count)
 exports.getPopularClubs = catchAsync(async (req, res, next) => {
-    const limit = req.query.limit * 1 || 5;
-    
-    const clubs = await Club.find()
-        .sort('-memberCount')
-        .limit(limit);
-    
-    res.status(200).json({
-        status: 'success',
-        results: clubs.length,
-        data: {
-            clubs
-        }
-    });
+   const result = await clubService.getAllClubs({
+      sortBy: "memberCount",
+      order: "desc",
+      limit: req.query.limit || 5,
+   });
+
+   res.status(200).json({
+      status: "success",
+      results: result.clubs.length,
+      data: {
+         clubs: result.clubs,
+      },
+   });
 });
 
-// Add a member to a club
-exports.addMember = catchAsync(async (req, res, next) => {
-    const club = await Club.findByIdAndUpdate(
-        req.params.id,
-        { $addToSet: { members: req.body.userId } },
-        { new: true, runValidators: true }
-    );
+// Get clubs by sport type
+exports.getClubsBySport = catchAsync(async (req, res, next) => {
+   const result = await clubService.getClubsBySport(req.params.sportType, req.query);
 
-    if (!club) {
-        return next(new AppError('No club found with that ID', 404));
-    }
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            club
-        }
-    });
+   res.status(200).json({
+      status: "success",
+      results: result.clubs.length,
+      pagination: result.pagination,
+      data: {
+         clubs: result.clubs,
+      },
+   });
 });
 
-// Remove a member from a club
-exports.removeMember = catchAsync(async (req, res, next) => {
-    const club = await Club.findByIdAndUpdate(
-        req.params.id,
-        { $pull: { members: req.body.userId } },
-        { new: true }
-    );
+// Add an administrator to club
+exports.addAdministrator = catchAsync(async (req, res, next) => {
+   const club = await clubService.addAdministrator(req.params.id, req.body.adminId, req.user.id);
 
-    if (!club) {
-        return next(new AppError('No club found with that ID', 404));
-    }
+   res.status(200).json({
+      status: "success",
+      data: {
+         club,
+      },
+   });
+});
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            club
-        }
-    });
+// Get club members
+exports.getClubMembers = catchAsync(async (req, res, next) => {
+   const club = await clubService.getClubById(req.params.id);
+
+   res.status(200).json({
+      status: "success",
+      data: {
+         members: club.members,
+      },
+   });
 });

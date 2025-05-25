@@ -1,38 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Trash2, Plus, Minus } from "react-feather";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import MainLayout from "../components/layout/MainLayout";
 
 const Cart = () => {
-   const [cartItems, setCartItems] = useState([
-      {
-         id: 1,
-         name: "Sports Jersey",
-         price: 49.99,
-         quantity: 1,
-         image: "https://placeholder.com/150",
-      },
-      {
-         id: 2,
-         name: "Training Equipment Set",
-         price: 129.99,
-         quantity: 1,
-         image: "https://placeholder.com/150",
-      },
-   ]);
+   const navigate = useNavigate();
+   const [cartItems, setCartItems] = useState([]);
+
+   // Load cart from localStorage
+   useEffect(() => {
+      const savedCart = localStorage.getItem("sportsphere-cart");
+      if (savedCart) {
+         setCartItems(JSON.parse(savedCart));
+      }
+   }, []);
 
    const updateQuantity = (id, change) => {
-      setCartItems(
-         cartItems.map((item) => (item.id === id ? { ...item, quantity: Math.max(1, item.quantity + change) } : item))
+      const updatedItems = cartItems.map((item) =>
+         item.id === id ? { ...item, quantity: Math.max(1, item.quantity + change) } : item
       );
+      setCartItems(updatedItems);
+      localStorage.setItem("sportsphere-cart", JSON.stringify(updatedItems));
    };
 
    const removeItem = (id) => {
-      setCartItems(cartItems.filter((item) => item.id !== id));
+      const updatedItems = cartItems.filter((item) => item.id !== id);
+      setCartItems(updatedItems);
+      localStorage.setItem("sportsphere-cart", JSON.stringify(updatedItems));
    };
 
    const calculateTotal = () => {
       return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+   };
+
+   const handleCheckout = () => {
+      navigate("/checkout");
+   };
+
+   const handleContinueShopping = () => {
+      navigate("/store");
    };
 
    if (cartItems.length === 0) {
@@ -41,8 +48,11 @@ const Cart = () => {
             <div className="min-h-screen bg-gray-50 p-8">
                <div className="max-w-2xl mx-auto text-center">
                   <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
-                  <p className="text-gray-600">Your cart is currently empty.</p>
-                  <button className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">
+                  <p className="text-gray-600 mb-6">Your cart is currently empty.</p>
+                  <button
+                     onClick={handleContinueShopping}
+                     className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+                  >
                      Continue Shopping
                   </button>
                </div>
@@ -65,7 +75,11 @@ const Cart = () => {
                            <motion.div key={item.id} layout className="p-6 border-b border-gray-200 last:border-b-0">
                               <div className="flex items-center justify-between">
                                  <div className="flex items-center space-x-4">
-                                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
+                                    <img
+                                       src={item.image || "/api/placeholder/80/80"}
+                                       alt={item.name}
+                                       className="w-16 h-16 object-cover rounded"
+                                    />
                                     <div>
                                        <h3 className="font-medium">{item.name}</h3>
                                        <p className="text-gray-600">${item.price}</p>
@@ -124,8 +138,18 @@ const Cart = () => {
                            </div>
                         </div>
 
-                        <button className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-colors">
+                        <button
+                           onClick={handleCheckout}
+                           className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-colors mb-4"
+                        >
                            Proceed to Checkout
+                        </button>
+
+                        <button
+                           onClick={handleContinueShopping}
+                           className="w-full border border-gray-300 text-gray-700 py-3 rounded-md hover:bg-gray-50 transition-colors"
+                        >
+                           Continue Shopping
                         </button>
                      </div>
                   </div>

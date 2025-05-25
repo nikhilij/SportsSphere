@@ -1,149 +1,161 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
-// Import Pages
-import Home from '../pages/Home';
-import Events from '../pages/Events';
-import EventDetails from '../pages/EventDetails';
-import Clubs from '../pages/Clubs';
-import ClubDetails from '../pages/ClubDetails';
-import Store from '../pages/Store';
-import Cart from '../pages/Cart';
-import Checkout from '../pages/Checkout';
-import Scholarship from '../pages/Scholarship';
-import Rewards from '../pages/Rewards';
-import Profile from '../pages/Profile';
-import AdminDashboard from '../pages/AdminDashboard';
-import ClubDashboard from '../pages/ClubDashboard';
-import Forums from '../pages/Forums';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import NotFound from '../pages/NotFound';
-import TestAdminAuth from '../pages/TestAdminAuth';
+// Import all pages
+import Home from "../pages/Home";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import Events from "../pages/Events";
+import EventDetails from "../pages/EventDetails";
+import Clubs from "../pages/Clubs";
+import ClubDetails from "../pages/ClubDetails";
+import Store from "../pages/Store";
+import Cart from "../pages/Cart";
+import Checkout from "../pages/Checkout";
+import Rewards from "../pages/Rewards";
+import ClubDashboard from "../pages/ClubDashboard";
+import AdminDashboard from "../pages/AdminDashboard";
+import Profile from "../pages/Profile";
+import Forums from "../pages/Forums";
+import Scholarships from "../pages/Scholarships";
+import NotFound from "../pages/NotFound";
 
-// Import Layout Components
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
-
-// Protected Route Component
-const ProtectedRoute = ({ children, requiredRole }) => {
-  const { user, isAuthenticated, loading } = useAuth();
-
-  // Show loading while authentication state is being determined
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  // If not authenticated, redirect to login
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  // If role is required and user doesn't have it
-  if (requiredRole && user.role !== requiredRole) {
-    return <Navigate to="/" replace />;
-  }
-
-  // User is authenticated and has required role (if specified)
-  return children;
-};
+// Import layout components
+import MainLayout from "../components/layout/MainLayout";
+import SimpleLayout from "../components/layout/SimpleLayout";
 
 const AppRoutes = () => {
-  return (
-    <>
-      <Navbar />
-      <main className="min-h-screen">
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/events/:id" element={<EventDetails />} />
-          <Route path="/clubs" element={<Clubs />} />
-          <Route path="/clubs/:id" element={<ClubDetails />} />
-          <Route path="/store" element={<Store />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/test-admin" element={<TestAdminAuth />} />
+   return (
+      <Routes>
+         {/* Public routes */}
+         <Route path="/" element={<Home />} />
+         <Route path="/login" element={<Login />} />
+         <Route path="/register" element={<Register />} />
+         <Route
+            path="/events"
+            element={
+               <MainLayout>
+                  <Events />
+               </MainLayout>
+            }
+         />
+         <Route
+            path="/events/:id"
+            element={
+               <MainLayout>
+                  <EventDetails />
+               </MainLayout>
+            }
+         />
+         <Route
+            path="/clubs"
+            element={
+               <MainLayout>
+                  <Clubs />
+               </MainLayout>
+            }
+         />
+         <Route
+            path="/clubs/:id"
+            element={
+               <MainLayout>
+                  <ClubDetails />
+               </MainLayout>
+            }
+         />
+         <Route path="/store" element={<Store />} />
+         <Route
+            path="/forums"
+            element={
+               <MainLayout>
+                  <Forums />
+               </MainLayout>
+            }
+         />
+         <Route
+            path="/scholarships"
+            element={
+               <MainLayout>
+                  <Scholarships />
+               </MainLayout>
+            }
+         />
 
-          {/* Protected Routes */}
-          <Route 
-            path="/cart" 
+         {/* Protected routes */}
+         <Route
+            path="/cart"
             element={
-              <ProtectedRoute>
-                <Cart />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/checkout" 
+               <ProtectedRoute>
+                  <Cart />
+               </ProtectedRoute>
+            }
+         />
+         <Route
+            path="/checkout"
             element={
-              <ProtectedRoute>
-                <Checkout />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/scholarships" 
+               <ProtectedRoute>
+                  <Checkout />
+               </ProtectedRoute>
+            }
+         />
+         <Route
+            path="/profile"
             element={
-              <ProtectedRoute>
-                <Scholarship />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/rewards" 
+               <ProtectedRoute>
+                  <Profile />
+               </ProtectedRoute>
+            }
+         />
+         <Route
+            path="/rewards"
             element={
-              <ProtectedRoute>
-                <Rewards />
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* Admin Routes - Using wildcard to handle all admin routes */}
-          <Route 
-            path="/admin/*" 
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminDashboard />
-              </ProtectedRoute>
-            } 
-          />
-          
-          <Route 
-            path="/profile" 
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/forums" 
-            element={
-              <ProtectedRoute>
-                <Forums />
-              </ProtectedRoute>
-            } 
-          />
+               <ProtectedRoute>
+                  <Rewards />
+               </ProtectedRoute>
+            }
+         />
 
-          {/* Club Admin Routes */}
-          <Route 
-            path="/club-dashboard" 
+         {/* Admin routes */}
+         <Route
+            path="/admin/*"
             element={
-              <ProtectedRoute requiredRole="club_admin">
-                <ClubDashboard />
-              </ProtectedRoute>
-            } 
-          />
+               <ProtectedRoute roles={["admin"]}>
+                  <AdminDashboard />
+               </ProtectedRoute>
+            }
+         />
 
-          {/* 404 Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
-    </>
-  );
+         {/* Club admin routes */}
+         <Route
+            path="/club-dashboard"
+            element={
+               <ProtectedRoute roles={["club_admin", "admin"]}>
+                  <ClubDashboard />
+               </ProtectedRoute>
+            }
+         />
+
+         {/* 404 Route */}
+         <Route
+            path="*"
+            element={
+               <SimpleLayout title="Page Not Found" subtitle="The page you're looking for doesn't exist">
+                  <div className="text-center py-12">
+                     <h2 className="text-2xl font-semibold text-gray-900 mb-4">404 - Page Not Found</h2>
+                     <p className="text-gray-600 mb-6">Sorry, we couldn't find the page you're looking for.</p>
+                     <a
+                        href="/"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+                     >
+                        Go back home
+                     </a>
+                  </div>
+               </SimpleLayout>
+            }
+         />
+      </Routes>
+   );
 };
 
 export default AppRoutes;

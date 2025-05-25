@@ -1,46 +1,39 @@
-// import React, { useState, useEffect } from "react";
-// import { BrowserRouter as Router } from "react-router-dom";
-// import { AuthProvider } from "../contexts/AuthContext";
-// import AppRoutes from "./AppRoutes";
-// import { ToastContainer } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import { AuthProvider } from "../contexts/AuthContext";
+import { Provider } from "react-redux";
+import store from "../redux/store";
+import AppRoutes from "./AppRoutes";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-// console.debug("Initializing AppWithProviders component...");
+const AppWithProviders = () => {
+   const [isLoading, setIsLoading] = useState(true);
 
-// // Loading component
-// const LoadingSpinner = () => (
-//   <div className="flex justify-center items-center h-screen bg-gray-50">
-//     <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-blue-500"></div>
-//   </div>
-// );
+   useEffect(() => {
+      setTimeout(() => {
+         setIsLoading(false);
+      }, 500);
+   }, []);
 
-// console.debug("Wrapping AppWithProviders with BrowserRouter...");
+   if (isLoading) {
+      return (
+         <div className="flex justify-center items-center h-screen bg-gray-50">
+            <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-blue-500"></div>
+         </div>
+      );
+   }
 
-// const AppWithProviders = () => {
-//   const [isLoading, setIsLoading] = useState(true);
+   return (
+      <Provider store={store}>
+         <Router>
+            <AuthProvider>
+               <AppRoutes />
+               <ToastContainer position="top-right" autoClose={3000} />
+            </AuthProvider>
+         </Router>
+      </Provider>
+   );
+};
 
-//   useEffect(() => {
-//     console.debug("Simulating resource loading in AppWithProviders...");
-//     setTimeout(() => {
-//       setIsLoading(false);
-//       console.debug("Resource loading complete.");
-//     }, 500);
-//   }, []);
-
-//   if (isLoading) {
-//     console.debug("AppWithProviders is in loading state.");
-//     return <LoadingSpinner />;
-//   }
-
-//   console.debug("Rendering AppWithProviders content...");
-//   return (
-//     <AuthProvider>
-//       <ToastContainer position="top-right" autoClose={3000} />
-//       <AppRoutes />
-//     </AuthProvider>
-//   );
-// };
-
-// console.debug("AppWithProviders component initialized successfully.");
-
-// export default AppWithProviders;
+export default AppWithProviders;

@@ -6,45 +6,47 @@ const jwt = require("jsonwebtoken");
  * @returns {String} JWT token
  */
 exports.signToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
+   if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined in environment variables");
+   }
+
+   return jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN || "90d",
+   });
 };
 
 /**
- * Creates a JWT and sends it to the client as a cookie
+ * Creates a JWT and sends it to the client
  * @param {Object} user - User object
  * @param {Number} statusCode - HTTP status code
  * @param {Object} res - Express response object
  */
 exports.createSendToken = (user, statusCode, res) => {
-  const token = this.signToken({ id: user.id });
+   const token = this.signToken({ id: user.id });
 
-  const cookieOptions = {
-    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
-    httpOnly: true,
-  };
+   const cookieOptions = {
+      expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRES_IN || 90) * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+   };
 
-  // Only add secure flag in production
-  if (process.env.NODE_ENV === "production") {
-    cookieOptions.secure = true;
-  }
+   // Remove sensitive data from output
+   if (user.password) user.password = undefined;
+   if (user.loginAttempts) user.loginAttempts = undefined;
+   if (user.lockUntil) user.lockUntil = undefined;
 
-  // Remove password from output
-  // eslint-disable-next-line no-param-reassign
-  if (user.password) user.password = undefined;
+   // Send JWT as cookie
+   res.cookie("jwt", token, cookieOptions);
 
-  // Send JWT as cookie
-  res.cookie("jwt", token, cookieOptions);
-
-  // Send response
-  res.status(statusCode).json({
-    status: "success",
-    token,
-    data: {
-      user,
-    },
-  });
+   // Send response
+   res.status(statusCode).json({
+      status: "success",
+      token,
+      data: {
+         user,
+      },
+   });
 };
 
 /**
@@ -53,5 +55,28 @@ exports.createSendToken = (user, statusCode, res) => {
  * @returns {Object} Decoded token
  */
 exports.verifyToken = (token) => {
-  return jwt.verify(token, process.env.JWT_SECRET);
+   if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined in environment variables");
+   }
+
+   try {
+      return jwt.verify(token, process.env.JWT_SECRET);
+   } catch (error) {
+      if (error.name === "TokenExpiredError") {
+         throw new Error("Token has expired");
+      } else if (error.name === "JsonWebTokenError") {
+         throw new Error("Invalid token");
+      } else {
+         throw new Error("Token verification failed");
+      }
+   }
+};
+
+/**
+ * Decodes a JWT token without verification (useful for getting payload)
+ * @param {String} token - JWT token to decode
+ * @returns {Object} Decoded token payload
+ */
+exports.decodeToken = (token) => {
+   return jwt.decode(token);
 };
